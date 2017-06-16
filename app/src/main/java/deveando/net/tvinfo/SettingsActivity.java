@@ -13,6 +13,9 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 /**
  * Created by Santiago on 16/06/2017.
  */
@@ -20,6 +23,8 @@ import android.widget.Toast;
 public class SettingsActivity extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     private static final int CURRENT_POSITION = 6;
     private int spinnerValue = 0;
+
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,11 @@ public class SettingsActivity extends Activity implements NavigationDrawerFragme
                 Toast.makeText(getApplicationContext(), getResources().getText(R.string.configuracion_guardada), Toast.LENGTH_SHORT).show();
             }
         });
+
+
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override

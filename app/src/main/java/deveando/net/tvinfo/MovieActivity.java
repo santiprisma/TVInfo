@@ -7,9 +7,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import deveando.net.tvinfo.model.Movie;
 import deveando.net.tvinfo.sql.MovieDB;
@@ -20,10 +25,24 @@ import deveando.net.tvinfo.util.Constants;
  */
 
 public class MovieActivity extends Activity {
+
+    private InterstitialAd mInterstitialAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.banner_ad_unit_id));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+        });
 
         if (getIntent().getSerializableExtra("movieInfo") != null) {
             final Movie movie = (Movie) getIntent().getSerializableExtra("movieInfo");
@@ -65,6 +84,13 @@ public class MovieActivity extends Activity {
                     Button buttonFavoritoRemove = (Button) findViewById(R.id.buttonFavoritoRemove);
                     buttonFavorito.setVisibility(View.GONE);
                     buttonFavoritoRemove.setVisibility(View.VISIBLE);
+
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+                    } else {
+                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                    }
+
                 }
             });
 
