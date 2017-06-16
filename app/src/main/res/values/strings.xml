@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">TV Info</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string-array name="secciones">
+        <item>Inicio</item>
+        <item>Populares</item>
+        <item>Drama</item>
+        <item>Acción</item>
+        <item>Infantiles</item>
+        <item>Regionales</item>
+        <item>Configuración</item>
+    </string-array>
+
+    <string name="welcome_text">Bienvenido a la humildá</string>
+    <string name="app_description">Aplicación simple para el proyecto de Android. La idea es consumir servicios rest, persistir información y utilizar la geolocalización. Pero bueno, es la idea.</string>
+
+    <string name="populares">Populares</string>
+    <string name="drama">Drama</string>
+    <string name="acción">Acción</string>
+
+    <string name="movie_info">Ficha de la película</string>
+    <string name="movie_title">Título</string>
+    <string name="movie_release">Fecha de estreno</string>
+    <string name="movie_description">Descripción</string>
+    <string name="button_share">Recomendar</string>
+    <string name="button_favorito">Agregar a favoritos</string>
+    <string name="button_favorito_eliminar">Eliminar de favoritos</string>
+
+    <string name="configuracion">Configuración</string>
+    <string name="seleccionar_genero">Elegí la pantalla de inicio</string>
+    <string name="configuracion_switch">Habilitado</string>
+    <string name="configuracion_guardar">Guardar</string>
+    <string name="configuracion_guardada">Configuración guardada</string>
+</resources>
