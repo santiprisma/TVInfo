@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -12,6 +13,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -42,6 +44,7 @@ public class RegionalActivity extends Activity implements NavigationDrawerFragme
     private static final int CURRENT_POSITION = 5;
     private List<Movie> movies = new ArrayList<>();
 
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +65,6 @@ public class RegionalActivity extends Activity implements NavigationDrawerFragme
         TextView textTitle = (TextView) findViewById(R.id.textGenero);
         textTitle.setText(getResources().getStringArray(R.array.secciones)[CURRENT_POSITION]);
 
-        MovieTask task = new MovieTask(this);
-        task.execute("sort_by=popularity.desc&with_genres=16");
-
         ListView listView = (ListView) findViewById(R.id.listResult);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -76,10 +76,16 @@ public class RegionalActivity extends Activity implements NavigationDrawerFragme
         });
 
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[] { Manifest.permission.ACCESS_COARSE_LOCATION }, 1);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, 1);
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 36000, this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String country = prefs.getString("country_code", "US");
+
+        MovieTask task = new MovieTask(this);
+        task.execute("certification_country="+ country +"&sort_by=vote_average.desc");
     }
 
     @Override
@@ -133,10 +139,12 @@ public class RegionalActivity extends Activity implements NavigationDrawerFragme
         List<Address> addresses;
 
         try {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
             if (addresses.size() > 0) {
-                System.out.println(addresses.get(0).getCountryCode());
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("country_code", addresses.get(0).getCountryCode());
             }
 
         } catch (IOException e) {
